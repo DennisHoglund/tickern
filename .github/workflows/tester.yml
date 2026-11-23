@@ -104,11 +104,11 @@ jobs:
             echo "finns=ja" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: supabase/setup-cli@v1
+      - uses: actions/setup-node@v4
         if: steps.koll.outputs.finns == 'ja'
         with:
-          version: latest
+          node-version: 22
 
       - name: Deploya tickern-quote
         if: steps.koll.outputs.finns == 'ja'
-        run: supabase functions deploy tickern-quote --remote="$SUPABASE_PROJECT_REF" --no-verify-jwt --use-api --yes
+        run: npx --yes supabase@latest functions deploy tickern-quote --remote="$SUPABASE_PROJECT_REF" --no-verify-jwt --use-api --yes
