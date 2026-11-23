@@ -2,7 +2,7 @@
 
 ## Syfte
 Personlig PWA för iPhone som visar svenska aktier i en grön terminal: watchlist, tickertape, logg och kommandorad.
-Kurserna är fördröjda cirka 15 minuter (gratis källa). En användare (Dennis), ingen inloggning i steg 1.
+Kurserna är fördröjda cirka 15 minuter (gratis källa). Riktar sig till nybörjare: siffrorna förklaras i klarspråk. En användare (Dennis), ingen inloggning i steg 1.
 
 ## Stack
 - Ren HTML/CSS/JS utan byggsteg. Moduler som IIFE på `window` (`TickernKurser`).
@@ -25,13 +25,24 @@ Kurserna är fördröjda cirka 15 minuter (gratis källa). En användare (Dennis
 - Okänd ticker tas bort automatiskt och loggas som fel.
 - Uppdatering var 60:e sekund, vid `visibilitychange` och `online`.
 
+## Funktioner (steg 2) – förklaringar i klarspråk
+Allt räknas fram av regler i `forklara.js` från kurserna. Ingen AI och inga nyheter, så appen säger aldrig *varför* på riktigt, bara vad siffrorna visar.
+- **Detaljvy:** tryck på en aktie eller skriv `INFO VOLV-B`. Visar bolagsbeskrivning (fast lista för vanliga bolag),
+  kurs, månadsgraf, "Vad hände?" och nyckeltal med förklaringar. ESC stänger.
+- Regler för "Vad hände?": steg/sjönk X %, stor rörelse (≥3 %) eller lugn dag (<0,5 %), jämförelse mot OMXS30
+  (som börsen inom 0,5 procentenheter, bättre/sämre, eller åt motsatt håll = troligen bolagsspecifikt), nära dagens
+  högsta/lägsta (översta/nedersta 20 %), förändring senaste månaden och nära månadens högsta/lägsta (inom 2 %).
+- **Dagens sammanfattning:** vardagar efter 17:30 skrivs en gång per dag (`tickern-sammanfattning`) i loggen:
+  OMXS30, bästa och sämsta aktien, hur många som steg och en mening om hur listan följde börsen. `DAG` visar den när som helst.
+
 ## Lagring (localStorage)
 - `tickern-watch` – symboler, t.ex. `VOLV-B.ST`.
 - `tickern-kurser` – senaste kurser för offline-visning.
 - `tickern-logg` – högst 40 rader.
+- `tickern-sammanfattning` – datum för senaste automatiska sammanfattningen.
 
 ## Edge function
-`GET /functions/v1/tickern-quote?symbols=VOLV-B.ST,^OMX` → `{ hamtad, kurser: [{ symbol, namn, valuta, pris, prev, forandring, procent, hog, lag, volym, tid, spark }] }`.
+`GET /functions/v1/tickern-quote?symbols=VOLV-B.ST,^OMX` → `{ hamtad, kurser: [{ symbol, namn, valuta, pris, prev, forandring, procent, hog, lag, volym, tid, spark, manad }] }`. `spark` = senaste 7 stängningskurserna, `manad` = alla stängningskurser senaste månaden.
 Okänd symbol ger `{ symbol, fel: 'okänd' }`. Högst 40 symboler. Tolkningen ligger i `tolka.mjs` och testas i Node.
 
 ## Tester
@@ -43,6 +54,7 @@ Rapport: https://dennishoglund.github.io/tickern/rapport/
 - Avanza/Nordnet används inte (inget öppet API / tar inte emot nya API-kunder).
 
 ## Kvar att göra
-- Steg 2: detaljvy per aktie med graf (1D–5Å) och nyckeltal.
-- Steg 3: prislarm (push eller logg).
+- Längre grafer (1Å–5Å) i detaljvyn.
+- Prislarm (push eller logg).
+- Eventuellt AI-förklaringar med nyheter (beslut nu: regler, gratis).
 - Steg 4: insynshandel från FI som loggrader.

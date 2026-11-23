@@ -7,7 +7,7 @@ Svenska aktier i grön terminal. PWA för iPhone med watchlist, tickertape och k
 
 ## Kom igång
 1. Öppna appen i Safari → Dela → Lägg till på hemskärmen.
-2. Skriv `HELP` i kommandoraden.
+2. Skriv `HELP` i kommandoraden. Tryck på en aktie för en förklaring i klarspråk. `DAG` visar dagens sammanfattning (kommer automatiskt efter 17:30).
 
 ## Filer
 | Fil | Innehåll |
@@ -15,7 +15,8 @@ Svenska aktier i grön terminal. PWA för iPhone med watchlist, tickertape och k
 | `index.html`, `styles.css` | Sidan och terminaldesignen (ljust/mörkt) |
 | `config.js` | Adress till kursfunktionen, standardlista |
 | `kurser.js` | Symboler, hämtning, cache, formatering |
-| `app.js` | Watchlist, tickertape, logg, kommandon, tema |
+| `forklara.js` | Bolagsbeskrivningar, förklaringar och dagens sammanfattning (regler) |
+| `app.js` | Watchlist, detaljvy, tickertape, logg, kommandon, tema |
 | `sw.js`, `manifest.webmanifest`, `icons/` | PWA och offline |
 | `supabase/functions/tickern-quote/` | Edge function som hämtar kurser från Yahoo |
 
