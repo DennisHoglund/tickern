@@ -64,7 +64,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .markor { animation: blink 1s steps(1) infinite; }
 
 /* Tickertape */
-.tape { overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--linje); padding: 6px 0; font-size: 12px; }
+.tape { overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--linje); padding: 9px 0; font-size: 16px; font-weight: 600; }
 .tape-inre { display: inline-block; animation: tape 40s linear infinite; }
 @keyframes tape { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .tape-inre, .markor { animation: none; } }
