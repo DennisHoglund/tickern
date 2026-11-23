@@ -111,4 +111,4 @@ jobs:
 
       - name: Deploya tickern-quote
         if: steps.koll.outputs.finns == 'ja'
-        run: supabase functions deploy tickern-quote --project-ref "$SUPABASE_PROJECT_REF" --no-verify-jwt --use-api
+        run: supabase functions deploy tickern-quote --remote="$SUPABASE_PROJECT_REF" --no-verify-jwt --use-api --yes
