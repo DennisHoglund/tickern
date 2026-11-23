@@ -1,12 +1,14 @@
 // Tickern – watchlist, kommandorad, logg och tema.
 (function () {
   const K = window.TickernKurser;
+  const F = window.TickernForklara;
   const CFG = window.TICKERN_CONFIG;
   const $ = (id) => document.getElementById(id);
 
   const WATCH_KEY = 'tickern-watch';
   const LOGG_KEY = 'tickern-logg';
   const THEME_KEY = 'tickern-theme';
+  const DAG_KEY = 'tickern-sammanfattning';
   const LOGG_MAX = 40;
 
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -78,7 +80,7 @@
       const k = kurser[s];
       const r = k ? K.riktning(k.procent) : 'still';
       return '<div class="rad ' + r + (s === nyss ? ' ny' : '') + '" role="row" data-symbol="' + esc(s) + '">' +
-        '<span class="tkr" role="cell">' + esc(K.visning(s)) + '</span>' +
+        '<span class="tkr" role="cell"><button type="button" class="info" data-symbol="' + esc(s) + '" aria-label="Visa ' + esc(K.visning(s)) + '">' + esc(K.visning(s)) + '</button></span>' +
         '<span class="spark" role="cell" aria-hidden="true">' + esc(k ? K.sparkline(k.spark) : '') + '</span>' +
         '<span class="pris" role="cell">' + (k ? K.tal(k.pris) : '…') + '</span>' +
         '<span class="pct" role="cell">' + (k ? K.pil(k.procent) + K.procent(k.procent) : '') + '</span>' +
@@ -106,6 +108,85 @@
 
   function renderAllt() { renderLista(); renderTape(); renderStatus(); }
 
+  // ---- Detaljvy ----------------------------------------------------------
+  let oppen = null;
+
+  function visaDetalj(symbol) {
+    const kurser = K.lasCache().kurser;
+    const k = kurser[symbol];
+    oppen = symbol;
+    $('d-symbol').textContent = K.visning(symbol);
+    $('detalj-titel').textContent = k ? k.namn : K.visning(symbol);
+    const besk = F.bolag(symbol);
+    $('d-bolag').textContent = besk;
+    $('d-bolag').hidden = !besk;
+    if (!k) {
+      $('d-pris').textContent = '…';
+      $('d-forandring').textContent = '';
+      $('d-graf').textContent = '';
+      $('d-tal').innerHTML = '';
+      $('d-forklaring').innerHTML = '<li>Inga kurser ännu – försök igen när kurserna hämtats.</li>';
+    } else {
+      const r = K.riktning(k.procent);
+      $('d-pris').textContent = K.tal(k.pris);
+      $('d-forandring').textContent = K.pil(k.procent) + ' ' + (k.forandring != null ? (k.forandring > 0 ? '+' : '') + K.tal(k.forandring) : '–') + ' (' + K.procent(k.procent) + ' %)';
+      $('d-kurs').className = 'd-kurs ' + r;
+      $('d-graf').textContent = K.sparkline(k.manad || k.spark);
+      const man = F.manadsForandring(k);
+      const tal = [
+        ['Förra stängning', K.tal(k.prev), 'Kursen när börsen stängde förra handelsdagen.'],
+        ['Dagens högsta', K.tal(k.hog), ''],
+        ['Dagens lägsta', K.tal(k.lag), ''],
+        ['Volym', k.volym != null ? new Intl.NumberFormat('sv-SE').format(k.volym).replace(/[\u00a0\u202f]/g, ' ') : '–', 'Antal aktier som köpts och sålts idag.'],
+        ['1 månad', man != null ? K.procent(man) + ' %' : '–', '']
+      ];
+      $('d-tal').innerHTML = tal.map((t) => '<div><dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>' +
+        (t[2] ? '<dd class="hint">' + esc(t[2]) + '</dd>' : '') + '</div>').join('');
+      const omx = kurser['^OMX'];
+      $('d-forklaring').innerHTML = F.forklaring(k, omx).map((t) => '<li>' + esc(t) + '</li>').join('');
+    }
+    $('detalj').hidden = false;
+    $('detalj').scrollTop = 0;
+    $('btn-tillbaka').focus();
+  }
+
+  function stangDetalj() {
+    const sym = oppen;
+    oppen = null;
+    $('detalj').hidden = true;
+    const knapp = sym && document.querySelector('#lista .info[data-symbol="' + CSS.escape(sym) + '"]');
+    if (knapp) knapp.focus();
+  }
+
+  $('lista').addEventListener('click', (e) => {
+    const rad = e.target.closest('.rad[data-symbol]');
+    if (rad) visaDetalj(rad.dataset.symbol);
+  });
+  $('btn-tillbaka').addEventListener('click', stangDetalj);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && oppen) stangDetalj(); });
+
+  // ---- Dagens sammanfattning --------------------------------------------
+  const idag = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Stockholm' });
+  const kortDatum = () => { const d = idag().split('-'); return Number(d[2]) + '/' + Number(d[1]); };
+
+  function skrivSammanfattning() {
+    const kurser = K.lasCache().kurser;
+    const rader = F.sammanfattning(kurser, watch, kurser['^OMX'], kortDatum());
+    rader.slice().reverse().forEach((t, i) => logga(t, i === rader.length - 1 ? 'dag' : ''));
+  }
+
+  function efterStangning(d) {
+    const p = sthlm(d);
+    if (['lör', 'sön'].includes(p.weekday.replace('.', ''))) return false;
+    return Number(p.hour) * 60 + Number(p.minute) >= 17 * 60 + 30;
+  }
+
+  function kollaSammanfattning() {
+    if (!efterStangning(new Date()) || las(DAG_KEY, '') === idag()) return;
+    spara(DAG_KEY, idag());
+    skrivSammanfattning();
+  }
+
   // ---- Uppdatering -------------------------------------------------------
   let pagar = false;
   async function uppdatera() {
@@ -116,6 +197,7 @@
       const svar = await K.hamta(symboler);
       if (offline) logga('ONLINE · kurser uppdaterade', 'info');
       offline = false;
+      setTimeout(() => { kollaSammanfattning(); if (oppen) visaDetalj(oppen); }, 0);
       for (const k of svar) {
         if (k.fel === 'okänd' && watch.includes(k.symbol)) {
           watch = watch.filter((s) => s !== k.symbol);
@@ -136,6 +218,8 @@
   const HJALP = [
     'VOLV-B        lägg till (Stockholm, .ST läggs på)',
     'DEL VOLV-B    ta bort från listan',
+    'INFO VOLV-B   förklaring i klarspråk (eller tryck på aktien)',
+    'DAG           sammanfattning av dagen',
     'UPD           uppdatera kurserna nu',
     'CLEAR         töm loggen',
     'RESET         återställ standardlistan'
@@ -147,6 +231,12 @@
     const [ord, ...arg] = delar;
 
     if (ord === 'HELP' || ord === '?') { HJALP.slice().reverse().forEach((h) => logga(h, 'info')); return; }
+    if (ord === 'DAG') { skrivSammanfattning(); return; }
+    if (ord === 'INFO') {
+      if (!arg.length) { logga('ERR  ange ticker, t.ex. INFO VOLV-B', 'fel'); return; }
+      visaDetalj(K.tillSymbol(arg.join('-')));
+      return;
+    }
     if (ord === 'CLEAR') { logg = []; spara(LOGG_KEY, logg); renderLogg(); return; }
     if (ord === 'UPD' || ord === 'R') { logga('UPD  hämtar kurser…', 'info'); uppdatera(); return; }
     if (ord === 'RESET') {

@@ -1,5 +1,5 @@
 // Höj versionen vid varje deploy så att telefonen hämtar nya filer.
-const CACHE = 'tickern-v2';
+const CACHE = 'tickern-v3';
 
 const SHELL = [
   './',
@@ -7,6 +7,7 @@ const SHELL = [
   './styles.css',
   './config.js',
   './kurser.js',
+  './forklara.js',
   './app.js',
   './manifest.webmanifest',
   './icons/icon.svg',

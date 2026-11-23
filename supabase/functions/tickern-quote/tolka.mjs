@@ -44,7 +44,8 @@ export function tolka(symbol, svar) {
     lag: m.regularMarketDayLow ?? null,
     volym: m.regularMarketVolume ?? null,
     tid,
-    spark: dagar.slice(-7).map((d) => d.c)
+    spark: dagar.slice(-7).map((d) => d.c),
+    manad: dagar.map((d) => d.c)
   };
 }
 

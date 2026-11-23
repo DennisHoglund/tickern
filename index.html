@@ -49,6 +49,26 @@
   </section>
 </main>
 
+<section id="detalj" class="detalj" hidden aria-labelledby="detalj-titel">
+  <div class="detalj-topp">
+    <button id="btn-tillbaka" type="button" class="tillbaka">&lt; ESC</button>
+    <span class="fordrojt">FÖRDRÖJT 15 MIN</span>
+  </div>
+  <p class="status">&gt; INFO <span id="d-symbol"></span></p>
+  <h2 id="detalj-titel"></h2>
+  <p id="d-bolag" class="bolag"></p>
+  <div id="d-kurs" class="d-kurs">
+    <span id="d-pris" class="d-pris"></span>
+    <span id="d-forandring"></span>
+  </div>
+  <p class="dim graf-rubrik">1 MÅNAD</p>
+  <div id="d-graf" class="d-graf" aria-hidden="true"></div>
+  <p class="dim rubrik">-- VAD HÄNDE? ------------------------------</p>
+  <ol id="d-forklaring" class="forklaring"></ol>
+  <p class="dim rubrik">-- NYCKELTAL ------------------------------</p>
+  <dl id="d-tal" class="tal"></dl>
+</section>
+
 <form id="form-cmd" class="cmd" autocomplete="off">
   <label for="cmd">&gt;</label>
   <input id="cmd" name="cmd" type="text" enterkeyhint="send" autocapitalize="characters" spellcheck="false"
@@ -58,6 +78,7 @@
 
 <script src="config.js"></script>
 <script src="kurser.js"></script>
+<script src="forklara.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

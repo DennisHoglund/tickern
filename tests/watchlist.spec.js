@@ -24,7 +24,7 @@ test.describe('Watchlist', () => {
 
   test('status visar tid för hämtningen och att kurserna är fördröjda', async ({ tickern: page }) => {
     await expect(page.locator('#status')).toHaveText(/^> WATCH \[15:00:00 · MARKNAD (ÖPPEN|STÄNGD)\]$/);
-    await expect(page.locator('.fordrojt')).toHaveText('FÖRDRÖJT 15 MIN');
+    await expect(page.locator('.topp .fordrojt')).toHaveText('FÖRDRÖJT 15 MIN');
   });
 
   test('hämtar alla symboler i ett anrop, med OMXS30', async ({ tickern: page, api }) => {

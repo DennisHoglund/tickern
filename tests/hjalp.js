@@ -4,7 +4,9 @@ const { mocka } = require('./mock');
 
 const test = base.test.extend({
   // Mockar allt externt innan varje test. api ger tillgång till kurserna.
+  // Klockan står still på måndag 23 nov 2026 kl 14:00 (börsen öppen) så att testerna inte beror på när de körs
   api: async ({ page }, use) => {
+    await page.clock.setFixedTime(new Date('2026-11-23T13:00:00Z'));
     await use(await mocka(page));
   },
 

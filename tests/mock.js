@@ -6,7 +6,8 @@ const IDAG = Date.UTC(2026, 10, 23, 14, 0, 0); // 23 nov 2026 15:00 svensk tid
 
 function kurs(symbol, namn, pris, prev, spark) {
   return { symbol, namn, valuta: 'SEK', pris, prev, forandring: pris - prev, procent: (pris - prev) / prev * 100,
-    hog: pris * 1.01, lag: pris * 0.99, volym: 1000000, tid: IDAG, spark };
+    hog: pris * 1.01, lag: pris * 0.99, volym: 1000000, tid: IDAG, spark,
+    manad: [spark[0] * 0.93, spark[0] * 0.95, spark[0] * 0.97, spark[0] * 0.98, ...spark] };
 }
 
 function exempelKurser() {

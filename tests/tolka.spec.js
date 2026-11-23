@@ -24,6 +24,7 @@ test.describe('Edge function', () => {
     expect(k.prev).toBe(283.58);
     expect(k.procent).toBeCloseTo(1.241, 2);
     expect(k.spark).toEqual([280, 283.58, 287.1]);
+    expect(k.manad).toEqual([280, 283.58, 287.1]);
   });
 
   test('utan handel idag jämförs mot senaste stängning', async () => {
