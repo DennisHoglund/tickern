@@ -1,0 +1,5 @@
+node_modules/
+test-results/
+rapport/
+playwright-report/
+playwright.lokal.config.js

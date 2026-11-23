@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="sv" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0F0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tickern">
+<title>Tickern</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="scan" aria-hidden="true"></div>
+
+<header class="topp">
+  <h1>TICKERN<span class="markor" aria-hidden="true">_</span></h1>
+  <div class="topp-hoger">
+    <span class="fordrojt">FÖRDRÖJT 15 MIN</span>
+    <button id="btn-theme" type="button" class="tema" aria-label="Byt tema">[<span id="theme-label">Auto</span>]</button>
+  </div>
+</header>
+
+<div class="tape" aria-hidden="true"><div id="tape" class="tape-inre"></div></div>
+
+<main>
+  <p id="status" class="status" role="status">&gt; WATCH</p>
+
+  <div class="tabell" role="table" aria-label="Watchlist">
+    <div class="rad huvud" role="row">
+      <span role="columnheader">TICKER</span>
+      <span role="columnheader">7D</span>
+      <span role="columnheader" class="h">SENAST</span>
+      <span role="columnheader" class="h">+/-%</span>
+    </div>
+    <div id="lista" role="rowgroup"></div>
+  </div>
+
+  <section class="logg" aria-label="Logg">
+    <p class="dim">-- LOGG ------------------------------------</p>
+    <ol id="logg"></ol>
+  </section>
+</main>
+
+<form id="form-cmd" class="cmd" autocomplete="off">
+  <label for="cmd">&gt;</label>
+  <input id="cmd" name="cmd" type="text" enterkeyhint="send" autocapitalize="characters" spellcheck="false"
+         placeholder="SINCH · DEL HM-B · HELP">
+  <button type="submit" class="kor" aria-label="Kör kommando">⏎</button>
+</form>
+
+<script src="config.js"></script>
+<script src="kurser.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
