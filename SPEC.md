@@ -12,8 +12,8 @@ Kurserna är fördröjda cirka 15 minuter (gratis källa). Riktar sig till nybö
 - GitHub Pages via Actions. Edge function deployas i samma workflow (kräver `SUPABASE_ACCESS_TOKEN`).
 
 ## Design
-- Mörkt (standard): bakgrund `#0A0F0A`, text `#33FF66`, dämpad `#1F9E45`, nedgång `#FF8C42`. Scanlines.
-- Ljust ("papperstryck"): bakgrund `#F1F4EC`, text `#0B5D25`, dämpad `#3F6E4C`, nedgång `#B04A00`.
+- Mörkt (standard): bakgrund `#0A0F0A`, text `#33FF66`, dämpad `#1F9E45`, nedgång `#FF5252` (röd). Scanlines.
+- Ljust ("papperstryck"): bakgrund `#F1F4EC`, text `#0B5D25`, dämpad `#3F6E4C`, nedgång `#C62828`.
 - Temaknapp Auto/Ljust/Mörkt (`tickern-theme`). Upp/ned visas med både färg och ▲▼.
 - Ikon: `>_` med stigande staplar på svart.
 

@@ -3,7 +3,7 @@
   --bg: #0A0F0A;
   --text: #33FF66;
   --dim: #1F9E45;
-  --ned: #FF8C42;
+  --ned: #FF5252;
   --linje: #1F9E45;
   --rad: #123D1E;
   --markerad: #0F2414;
@@ -14,14 +14,14 @@
 
 @media (prefers-color-scheme: light) {
   :root[data-theme="auto"] {
-    --bg: #F1F4EC; --text: #0B5D25; --dim: #3F6E4C; --ned: #B04A00; --linje: #3F6E4C;
+    --bg: #F1F4EC; --text: #0B5D25; --dim: #3F6E4C; --ned: #C62828; --linje: #3F6E4C;
     --rad: #D3DECF; --markerad: #E3EBDF; --knapp-text: #F1F4EC; --scan: rgba(0, 0, 0, 0.03);
     color-scheme: light;
   }
 }
 
 :root[data-theme="light"] {
-  --bg: #F1F4EC; --text: #0B5D25; --dim: #3F6E4C; --ned: #B04A00; --linje: #3F6E4C;
+  --bg: #F1F4EC; --text: #0B5D25; --dim: #3F6E4C; --ned: #C62828; --linje: #3F6E4C;
   --rad: #D3DECF; --markerad: #E3EBDF; --knapp-text: #F1F4EC; --scan: rgba(0, 0, 0, 0.03);
   color-scheme: light;
 }
@@ -96,6 +96,8 @@ main { flex: 1; overflow-y: auto; padding: 0 16px 16px; -webkit-overflow-scrolli
 .logg li.fel { color: var(--ned); }
 .logg li.info { color: var(--dim); }
 .logg li.dag { font-weight: 600; }
+.logg li.ned { color: var(--ned); }
+.tape .ned { color: var(--ned); }
 
 /* Kommandorad */
 .cmd {

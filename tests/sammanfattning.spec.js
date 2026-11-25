@@ -19,6 +19,22 @@ test.describe('Dagens sammanfattning', () => {
     await bild(page, 'Dagens sammanfattning');
   });
 
+  test('nedgångar i sammanfattningen visas i rött', async ({ page, api }) => {
+    const omx = api.kurser['^OMX'];
+    api.kurser['^OMX'] = { ...omx, pris: 2460.7, forandring: -36.2, procent: -1.45 };
+    await page.clock.setFixedTime(new Date('2026-11-23T17:00:00Z'));
+    await page.goto('./');
+    const rubrik = page.locator('#logg li.dag');
+    await expect(rubrik).toContainText('OMXS30 ▼-1,45 %');
+    await expect(rubrik).toHaveClass(/ned/);
+    await expect(page.locator('#logg li', { hasText: 'BÄST' })).not.toHaveClass(/ned/);
+    await expect(page.locator('#logg li', { hasText: 'SÄMST' })).toHaveClass(/ned/);
+    const fg = await rubrik.evaluate((el) => getComputedStyle(el).color);
+    const ned = await page.locator('#lista .rad.ned').first().evaluate((el) => getComputedStyle(el).color);
+    expect(fg).toBe(ned);
+    await bild(page, 'Sammanfattning när börsen sjönk');
+  });
+
   test('skrivs bara en gång per dag', async ({ page, api }) => {
     await page.clock.setFixedTime(new Date('2026-11-23T17:00:00Z'));
     await page.goto('./');

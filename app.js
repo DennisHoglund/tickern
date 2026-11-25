@@ -91,7 +91,7 @@
   function renderTape() {
     const kurser = K.lasCache().kurser;
     const delar = ['^OMX', ...watch.filter((s) => s !== '^OMX')].map((s) => kurser[s]).filter(Boolean).map((k) =>
-      '<span class="' + (K.riktning(k.procent) === 'ned' ? 'dim' : '') + '">' + esc(K.visning(k.symbol)) + ' ' +
+      '<span class="' + (K.riktning(k.procent) === 'ned' ? 'ned' : '') + '">' + esc(K.visning(k.symbol)) + ' ' +
       K.tal(k.pris) + ' ' + K.pil(k.procent) + K.procent(k.procent) + '% · </span>').join('');
     $('tape').innerHTML = delar ? delar + delar : '<span>VÄNTAR PÅ KURSER · </span>';
   }
@@ -172,7 +172,11 @@
   function skrivSammanfattning() {
     const kurser = K.lasCache().kurser;
     const rader = F.sammanfattning(kurser, watch, kurser['^OMX'], kortDatum());
-    rader.slice().reverse().forEach((t, i) => logga(t, i === rader.length - 1 ? 'dag' : ''));
+    // Rader med nedgång (▼) blir röda, rubrikraden är halvfet
+    rader.slice().reverse().forEach((t, i) => {
+      const typ = [i === rader.length - 1 ? 'dag' : '', t.includes('▼') ? 'ned' : ''].filter(Boolean).join(' ');
+      logga(t, typ);
+    });
   }
 
   function efterStangning(d) {
