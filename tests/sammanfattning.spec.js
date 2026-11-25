@@ -35,6 +35,16 @@ test.describe('Dagens sammanfattning', () => {
     await bild(page, 'Sammanfattning när börsen sjönk');
   });
 
+  test('äldre sparade loggrader med nedgång blir också röda', async ({ page, api }) => {
+    await page.addInitScript(() => {
+      if (!localStorage.getItem('tickern-logg')) {
+        localStorage.setItem('tickern-logg', JSON.stringify([{ t: Date.now(), text: 'DAGEN 24/11 · OMXS30 ▼-1,45 %', typ: 'dag' }]));
+      }
+    });
+    await page.goto('./');
+    await expect(page.locator('#logg li', { hasText: 'DAGEN 24/11' })).toHaveClass(/dag ned/);
+  });
+
   test('skrivs bara en gång per dag', async ({ page, api }) => {
     await page.clock.setFixedTime(new Date('2026-11-23T17:00:00Z'));
     await page.goto('./');

@@ -60,8 +60,12 @@
     renderLogg();
   }
   function renderLogg() {
-    $('logg').innerHTML = logg.map((r) =>
-      '<li class="' + esc(r.typ) + '">[' + klocka(r.t) + '] ' + esc(r.text) + '</li>').join('');
+    // Rader som visar en nedgång (▼) blir röda, även äldre sparade rader
+    $('logg').innerHTML = logg.map((r) => {
+      const typ = (r.typ || '').split(' ').filter((t) => t && t !== 'ned');
+      if (r.text.includes('▼') && !typ.includes('fel')) typ.push('ned');
+      return '<li class="' + esc(typ.join(' ')) + '">[' + klocka(r.t) + '] ' + esc(r.text) + '</li>';
+    }).join('');
   }
 
   // ---- Watchlist ---------------------------------------------------------
